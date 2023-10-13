@@ -1,0 +1,17 @@
+{{>layout/header}}
+
+<form class="container" action="/member/join" method="post">
+    <div class="mb-3">
+        <label class="form-label">이메일</label>
+        <input class="form-control" type="text" name="email" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">비밀번호</label>
+        <input class="form-control" type="password" name="password" />
+    </div>
+
+    <button type="submit" class="btn btn-success">가입하기</button>
+</form>
+
+{{>layout/footer}}

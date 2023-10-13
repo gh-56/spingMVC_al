@@ -1,0 +1,21 @@
+{{>layout/header}}
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">이메일</th>
+        <th scope="col">비밀번호</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!--반복 가능한 객체일 경우, 해당 부분을 반복-->
+    {{#member}}
+        <tr>
+            <th scope="row">{{id}}</th>
+            <td>{{email}}</td>
+            <td>{{password}}</td>
+        </tr>
+    {{/member}}
+    </tbody>
+</table>
+{{>layout/footer}}

@@ -1,0 +1,21 @@
+{{>layout/header}}
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">제목</th>
+        <th scope="col">내용</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!--반복 가능한 객체일 경우, 해당 부분을 반복-->
+    {{#article}}
+        <tr>
+            <th scope="row">{{id}}</th>
+            <td>{{title}}</td>
+            <td>{{content}}</td>
+        </tr>
+    {{/article}}
+    </tbody>
+</table>
+{{>layout/footer}}
