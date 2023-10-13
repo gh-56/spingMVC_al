@@ -3,6 +3,7 @@ package com.erser.springmvc.controller;
 import com.erser.springmvc.dto.ArticleForm;
 import com.erser.springmvc.entity.Article;
 import com.erser.springmvc.repository.ArticleRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,12 +19,16 @@ import java.util.Optional;
 
 @Controller
 @Slf4j      // 로깅 기능을 위한 어노테이션
+@RequiredArgsConstructor    // 생성자를 통한 의존성 주입
 public class ArticleController {
 
     // 스프링부트에서 스프링 컨테이너에 의존성 주입(DI)
-    @Autowired
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
 
+//    @Autowired // 스프링에서 생성자가 하나만 있을 때, @Autowired가 없어도 자동으로 DI를 한다.
+//    public ArticleController(ArticleRepository articleRepository){
+//        this.articleRepository = articleRepository;
+//    }
     // CREATE
     @GetMapping("/article/new")
     public String newArticleForm() {
@@ -40,7 +45,9 @@ public class ArticleController {
         // 2. Repository (DAO)로 Entity를 DB에 저장
         Article saved = articleRepository.save(article);
         log.info(saved.toString());
-        return "";
+        // 리다이렉트를 통해 새로운 주소 요청
+        // "redirect:URL 주소
+        return "redirect:/article/"+ saved.getId();
     }
 
     // READ
