@@ -24,6 +24,7 @@ public class MemberController {
         return "members/new";
     }
 
+    // CREATE
     @PostMapping("/member/join")
     public String join(MemberForm dto){
         // 1. DTO를 도메인 Entity로 변환
@@ -47,5 +48,24 @@ public class MemberController {
         List<Member> all = memberRepository.findAll();
         model.addAttribute("memberList", all);
         return "members/showAll";
+    }
+
+    // UPDATE
+    @GetMapping("/member/{id}/edit")
+    public String edit(@PathVariable Long id, Model model){
+        Member member = memberRepository.findById(id).orElse(null);
+        model.addAttribute("member", member);
+        return "members/edit";
+    }
+
+    @PostMapping("/member/{id}/update")
+    public String update(@PathVariable Long id, MemberForm dto){
+        Member member = dto.toEntity();
+        Member target = memberRepository.findById(id).orElse(null);
+        if(target != null){
+            member.setId(id);
+            memberRepository.save(member);
+        }
+        return "redirect:/member/"+id;
     }
 }

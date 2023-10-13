@@ -70,4 +70,30 @@ public class ArticleController {
         model.addAttribute("articleList", all);
         return "articles/index";
     }
+
+    // UPDATE
+    @GetMapping("/article/{id}/edit")
+    public String edit(@PathVariable Long id, Model model){
+        // 수정할 데이터 가져오기
+        Article article = articleRepository.findById(id).orElse(null);
+        model.addAttribute("article", article);
+        // View Resolve
+        return "articles/edit";
+    }
+
+    @PostMapping("/article/{id}/update")
+    public String update(ArticleForm dto, @PathVariable Long id){
+        log.info(dto.toString());
+        // 1. DTO를 엔티티로 변환
+        Article article = dto.toEntity();
+        // 2. 엔티티를 DB에 저장
+        // 2-1 DB에서 기존 데이터를 가져오기
+        Article target = articleRepository.findById(id).orElse(null);
+        // 2-2 데이터 갱신하기
+        if(target != null){
+            article.setId(id);
+            articleRepository.save(article);
+        }
+        return "redirect:/article/"+id;
+    }
 }

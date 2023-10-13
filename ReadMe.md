@@ -86,3 +86,20 @@ public class LoggerTest {
       - 모든 필드는 private이어야 함
       - getter / setter가 있어야 함
     - Spring Bean과는 다르다 (스프링빈 : 스프링에서 관리하는 객체)
+
+
+## PRG 패턴 (POST - Redirect - GET)
+- 웹 앱에서 사용자 상호작용을 다루는 디자인패턴
+  1. POST : HTTP POST 메서드로 서버에 양식을 제출
+  2. 서버에서 로직 실행 : POST 요청을 받고 필요한 로직 수행
+  3. Redirect : HTTP 리다이렉트 응답 생성해 다른 페이지로 이동
+  4. GET : HTTP GET 요청을 통해 결과 확인
+- 새로고침을 통한 **중복 제출 방지**
+- UX 개선
+
+## 생성자 주입
+- 생성자가 1개만 있을 경우
+  - @Autowired 생략해도 주입이 가능한 편의성 제공
+- 롬복의 @RequiredArgsConstructor를 사용
+  - 생성자 코드를 생략할 수 있다.
+  - 의존성 주입 필드는 반드시 private final로 선언해야한다

@@ -6,12 +6,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Setter
 public class Member {
     @Id
     @GeneratedValue
