@@ -1,8 +1,10 @@
 package com.erser.springmvc.controller;
 
 import com.erser.springmvc.dto.ArticleForm;
+import com.erser.springmvc.dto.CommentDto;
 import com.erser.springmvc.entity.Article;
 import com.erser.springmvc.repository.ArticleRepository;
+import com.erser.springmvc.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -25,6 +27,7 @@ public class ArticleController {
 
     // 스프링부트에서 스프링 컨테이너에 의존성 주입(DI)
     private final ArticleRepository articleRepository;
+    private final CommentService commentService;
 
 //    @Autowired // 스프링에서 생성자가 하나만 있을 때, @Autowired가 없어도 자동으로 DI를 한다.
 //    public ArticleController(ArticleRepository articleRepository){
@@ -58,8 +61,10 @@ public class ArticleController {
         log.info("id : " + id);
         // 1. id 조회하여 데이터 가져오기
         Article article = articleRepository.findById(id).orElse(null);
+        List<CommentDto> comments = commentService.comments(id);
         // 2. 모델에 데이터를 등록하기
         model.addAttribute("article", article);
+        model.addAttribute("comments", comments);
         // 3. 뷰 페이지
         return "articles/show";
     }

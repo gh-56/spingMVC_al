@@ -135,3 +135,72 @@ public class LoggerTest {
 
 ## HttpStatus
 - 상태코드를 관리하는 클래스, Enum 타입 200 => HttpStatus.OK
+
+## 테스트
+- JUnit5 라이브러리 등을 사용
+- 프로그램의 품질을 검증하는 것으로, 의도하는 대로 프로그램이 잘 동작하는지 확인하는 과정
+- 자주 사용하는 기법 두 가지
+  - given(주어진 상태에서) - when(어떤 메소드를 실행했을 때) - then(결과)
+  - 예상되는 데이터(expected) - 실제 데이터(actual) - 비교 검증(assert)
+- test 디렉토리 위치
+  - src > test > java (src > main > java 의 위치와 동일한 테스트 디렉토리에 테스트 파일 생성)
+- @SpringBootTest
+  - 스프링 부트와 테스트 클래스를 연동해서 사용
+- 트랜젝션
+  - 테스트 케이스에서 트랜잭션(@Transactional) 어노테이션 붙으면 변경 데이터 롤백이 된다. 다른 테스트에 영향을 미치지 않을 수 있다.
+
+## 계층 구조 (Layerd Architecture)
+- 관심사의 분리 (Seperation of Concern)을 위해 각각의 책임(역할, 관심사)를 가진 계층으로 분리한 아키텍쳐
+- 계층 응집도를 높이고, 결합도를 낮추기 위해서 => 재사용성, 유지보수 쉽게
+1. Presentation Layer
+   - 사용자가 데이터를 전달하기 위해 화면에 정보를 표시하는 책임
+   - Controller 요청, 응답, 반환
+2. Business Layer
+   - 애플리케이션의 요구사항, 비즈니스 로직을 수행하는 책임
+   - Service
+3. Persistence Layer
+   - DB에 접근하여 데이터를 생성, 조회, 읽기, 삭제 등을 하는 책임
+   - Repository, DAO
+4. Database Layer
+   - 실제 데이터베이스가 존재하는 계층
+   - H2, MySQL, Oracle, Porstgres ...
+
+## 데이터 연관 관계
+1. 일대다 관계
+   - 한 엔티티의 하나의 데이터가 다른 엔티티의 여러 데이터와 연관 될 때
+   - @OneToMany
+2. 다대일 관계
+   - 한 엔티티의 여러 데이터가 다른 엔티티의 한 데이터와 연관 될 때
+   - @ManyToOne
+   - 연관관계의 주인이 많은 쪽을 선택하는 경우가 일반적이다.
+3. 대표키(PK)와 외래키(FK)
+   - @Id
+   - @ManyToOne, @JoinColumn(외래키 필드 이름)
+4. JpaRepository
+   - CrudRepository를 상속받은 인터페이스로 JPA에 특화된 여러 기능을 제공한다.
+5. 네이티브 쿼리
+   - 리파지토리에서 메서드로 쿼리를 작성해서 실행하는 것
+   1. @Query 사용하는 방법
+      - nativeQuery = true : 기존 SQL문 그대로 사용
+      - false일 경우 JPQL(Java Persistance Query Language)을 사용
+   2. orm.xml (resources/META-INF/orm.xml) 사용하는 방법
+
+## REST API 레이어 아키텍쳐 흐름 정리
+REST Controller <- (dto) -> Service -> Repository <-(entity)-> DB  
+- Rest Controller
+  - 요청, 응답, 뷰가 아니라 뎅터를 반환
+  - 서비스와 협업
+- Service
+  - 처리 흐름을 담당
+  - @Transactional을 통해 예외 발생 시 롤백
+- DTO
+  - 사용자에게 보여줄 데이터를 담은 전송 객체 or
+  - 클라이언트로부터 받는 데이터 형식
+- Entity
+  - DB 조회하고 전달할 때, 리파지터리에서 매개변수로 사용
+- 리파지터리
+  - DB에 명령을 보내고 응답 받음
+  - native Query, JQPL 등 SQL문 사용 가능  
+    
+생성 메서드 : createXXX(), 다른 데이터타입을 매개변수로 받아, 해당 데이터타입으로 생성, static  
+orElseThrow() : 옵셔널 객체 (null 일수도 있고, 아닐수 있는 객체), 값이 존재하지 않으면 예외 발생  
