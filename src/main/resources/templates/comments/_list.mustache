@@ -2,11 +2,133 @@
     {{#comments}}
         <div class="card m-3">
             <div class="card-header">
-                {{nickname}}
+                {{ nickname }}
+                <!-- Button trigger modal -->
+                <button
+                        type="button"
+                        class="btn btn-sm btn-outline-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#comment-edit-modal"
+                        data-bs-id="{{ id }}"
+                        data-bs-nickname="{{ nickname }}"
+                        data-bs-body="{{ body }}"
+                        data-bs-article-id="{{ articleId }}"
+                >
+                    수정
+                </button>
             </div>
             <div class="card-body">
-                {{body}}
+                {{ body }}
             </div>
         </div>
     {{/comments}}
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="comment-edit-modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-black" id="exampleModalLabel">
+                    댓글 수정
+                </h1>
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body text-black">
+                <form>
+                    <!--    닉네임        -->
+                    <div class="mb-3">
+                        <label for="edit-comment-nickname" class="form-label">닉네임</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="edit-comment-nickname"
+                        />
+                    </div>
+                    <!--    댓글 본문        -->
+                    <div class="mb-3">
+                        <label for="edit-comment-body" class="form-label">댓글 본문</label>
+                        <textarea
+                                type="text"
+                                class="form-control"
+                                id="edit-comment-body"
+                        ></textarea>
+                    </div>
+                    <!--   숨긴 데이터 : id, 게시글 id  -->
+                    <input type="hidden" id="edit-comment-id" />
+                    <input type="hidden" id="edit-comment-article-id" />
+                    <!--   제출 버튼     -->
+                    <button type="button" id="comment-update-btn" class="btn btn-primary">
+                        댓글 수정
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 모달 이벤트 -->
+<script>
+    {
+      // 모달 DOM 선택
+      const commentEditModal = document.getElementById('comment-edit-modal');
+
+      // 이벤트 감지
+      commentEditModal.addEventListener('show.bs.modal', (event) => {
+        // 1. 트리거 버튼 선택
+        const triggerBtn = event.relatedTarget;
+        // 2. 데이터 가져오기 (html 트리거버튼 -> js 변수)
+        const id = triggerBtn.getAttribute('data-bs-id');
+        const nickname = triggerBtn.getAttribute('data-bs-nickname');
+        const body = triggerBtn.getAttribute('data-bs-body');
+        const articleId = triggerBtn.getAttribute('data-bs-article-id');
+        // 3. 데이터 반영하기 (js변수 -> 모달 폼 입력창)
+        document.getElementById('edit-comment-id').value = id;
+        document.getElementById('edit-comment-article-id').value = articleId;
+        document.getElementById('edit-comment-nickname').value = nickname;
+        document.getElementById('edit-comment-body').value = body;
+      });
+    }
+    {
+      // 완료 버튼
+      const commentUpdateBtn = document.getElementById('comment-update-btn');
+      // 이벤트 감지
+      commentUpdateBtn.addEventListener('click', clickHandler);
+      // 이벤트 핸들러
+      function clickHandler() {
+        // JSON 객체 생성 (dto에 맞게)
+        const comment = {
+          id: document.getElementById('edit-comment-id').value,
+          articleId: document.getElementById('edit-comment-article-id').value,
+          nickname: document.getElementById('edit-comment-nickname').value,
+          body: document.getElementById('edit-comment-body').value,
+        };
+        console.log(comment);
+
+        // REST API 호출
+        const url = `/api/comments/${comment.id}`;
+        // 첫번째 매개변수, url, 두번째 매개변수 요청 정보(메서드, 헤더, 본문 등)
+        fetch(url, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(comment),
+        }).then((response) => {
+          // 응답 확인 메시지
+          console.log(response);
+          const msg = response.ok
+            ? '댓글이 성공적으로 수정되었습니다.'
+            : '수정실패';
+          console.log('msg');
+          // 페이지 새로 고침
+          window.location.reload();
+        });
+      }
+    }
+</script>
